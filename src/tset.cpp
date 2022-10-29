@@ -54,6 +54,8 @@ void TSet::DelElem(const int Elem) // исключение элемента мн
 
 TSet& TSet::operator=(const TSet& s) // присваивание
 {
+    if (this == &s)
+        return *this;
     this->MaxPower = s.MaxPower;
     this->BitField = s.BitField;
     return *this;
@@ -111,26 +113,17 @@ TSet TSet::operator~(void) // дополнение
 }
 
 // перегрузка ввода/вывода
-
+//Enter numer of element, then enter ',' to continue or '.' to stop 
 istream& operator>>(istream& istr, TSet& s) // ввод
 {
-    size_t temp;
-    unsigned int cont = 0;
-    do
+    char sym = ',';
+    size_t tmp;
+    while (sym != '.')
     {
-        cout << "Enter index of element that belongs to the set: ";
-        cin >> temp;
-        if (temp < 0 || temp >= s.GetMaxPower())
-        {
-            cout << "Wrong index;" << endl;
-            break;
-        }
-        s.InsElem(temp);
-
-        cout << "Enter 0 to stop entering, enter 1 to continue: ";
-        cin >> cont;
-
-    } while (cont == 1);
+        istr >> tmp >> sym;
+        if (tmp < s.MaxPower && tmp > 0)
+            s.InsElem(tmp);
+    }
     return istr;
 }
 
@@ -139,7 +132,7 @@ ostream& operator<<(ostream& ostr, const TSet& s) // вывод
     for (size_t i = 0; i < s.GetMaxPower(); i++)
     {
         if (s.IsMember(i))
-            cout << "Set contain element index:" << i << endl;
+            ostr << "Set contain element index:" << i << endl;
     }
     return ostr;
 }
