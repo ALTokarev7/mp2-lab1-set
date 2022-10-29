@@ -142,7 +142,9 @@ int TBitField::operator!=(const TBitField& bf) const // сравнение
 
 TBitField TBitField::operator|(const TBitField& bf) // операция "или"
 {
-	TBitField res(max(this->BitLen, bf.BitLen));
+	TBitField res(*this);
+	if (this->BitLen < bf.BitLen)
+		res = bf;
 	size_t iterNum = min(this->MemLen, bf.MemLen) * sizeof(TELEM) / sizeof(size_t);
 	if (iterNum > 0)
 	{
@@ -160,7 +162,9 @@ TBitField TBitField::operator|(const TBitField& bf) // операция "или"
 
 TBitField TBitField::operator&(const TBitField& bf) // операция "и"
 {
-	TBitField res(max(this->BitLen, bf.BitLen));
+	TBitField res(*this);
+	if (this->BitLen < bf.BitLen)
+		res = bf;
 	size_t iterNum = min(this->MemLen, bf.MemLen) * sizeof(TELEM) / sizeof(size_t);
 	if (iterNum > 0)
 	{
