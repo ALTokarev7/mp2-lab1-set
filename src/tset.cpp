@@ -78,8 +78,8 @@ int TSet::operator!=(const TSet& s) const // сравнение
 }
 
 TSet TSet::operator+(const TSet& s) // объединение
-{
-    TSet res(max(this->MaxPower, s.GetMaxPower()));
+{   
+    TSet res(max(this->MaxPower, s.MaxPower));
     res.BitField = this->BitField | s.BitField;
     return res;
 }
@@ -99,8 +99,8 @@ TSet TSet::operator-(const int Elem) // разность с элементом
 }
 
 TSet TSet::operator*(const TSet& s) // пересечение
-{
-    TSet res(max(this->MaxPower, s.GetMaxPower()));
+{   
+    TSet res(max(this->MaxPower, s.MaxPower));
     res.BitField = this->BitField & s.BitField;
     return res;
 }
@@ -121,7 +121,7 @@ istream& operator>>(istream& istr, TSet& s) // ввод
     while (sym != '.')
     {
         istr >> tmp >> sym;
-        if (tmp < s.MaxPower && tmp > 0)
+        if (tmp < s.MaxPower && tmp >= 0)
             s.InsElem(tmp);
     }
     return istr;
@@ -129,10 +129,14 @@ istream& operator>>(istream& istr, TSet& s) // ввод
 
 ostream& operator<<(ostream& ostr, const TSet& s) // вывод
 {
-    for (size_t i = 0; i < s.GetMaxPower(); i++)
-    {
+    size_t i = 0;
+    while(!s.IsMember(i))
+        i++;
+    ostr << i;
+    for (++i; i < s.GetMaxPower(); i++)
         if (s.IsMember(i))
-            ostr << "Set contain element index:" << i << endl;
-    }
+            ostr <<", "<< i;
+    ostr << "." << endl;
+
     return ostr;
 }

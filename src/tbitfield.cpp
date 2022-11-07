@@ -162,9 +162,12 @@ TBitField TBitField::operator|(const TBitField& bf) // операция "или"
 
 TBitField TBitField::operator&(const TBitField& bf) // операция "и"
 {
-	TBitField res(*this);
+	TBitField res(this->BitLen);
 	if (this->BitLen < bf.BitLen)
-		res = bf;
+	{
+		TBitField tmp(bf.BitLen);
+		res = tmp;
+	}
 	size_t iterNum = min(this->MemLen, bf.MemLen) * sizeof(TELEM) / sizeof(size_t);
 	if (iterNum > 0)
 	{
@@ -196,8 +199,8 @@ TBitField TBitField::operator~(void) // отрицание
 	for (; i < this->MemLen; i++)
 		res.pMem[i] = ~this->pMem[i];
 	if (MemLen * sizeof(TELEM) * 8 != BitLen)
-		res.pMem[i - 1] &= ~((~(TELEM)0) << ((sizeof(TELEM) * 8) - (this->MemLen * sizeof(TELEM) * 8 - this->BitLen)));
-
+		res.pMem[i - 1] &= ~((~(TELEM)0) << (this->BitLen % (sizeof(TELEM) * 8)));
+	
 	return res;
 }
 
